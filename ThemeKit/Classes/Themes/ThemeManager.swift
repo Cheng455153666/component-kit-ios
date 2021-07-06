@@ -12,7 +12,11 @@ public class ThemeManager {
         didSet {
             UserDefaults.standard.set(themeMode.rawValue, forKey: ThemeManager.userDefaultsKey)
             currentTheme = ThemeManager.theme(mode: themeMode)
-            Theme.updateNavigationBarTheme()
+            if #available(iOS 13.0, *) {
+                Theme.updateNavigationBarTheme()
+            } else {
+                // Fallback on earlier versions
+            }
 
             changeThemeRelay.accept(themeMode)
         }
@@ -55,6 +59,7 @@ public class Theme {
         ThemeManager.shared.currentTheme
     }
 
+    @available(iOS 13.0, *)
     public static func updateNavigationBarTheme() {
         let standardAppearance = UINavigationBarAppearance()
         standardAppearance.configureWithTransparentBackground()
